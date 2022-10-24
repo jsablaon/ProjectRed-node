@@ -6,7 +6,7 @@ const StoreModel = require('../storeSchema');
 const CartModel = require('../cartSchema');
 
 // Connecting to database
-const connectionString = "mongodb+srv://projectred:projectred@projectredcluster0.31rilke.mongodb.net/ProjectRedDB?retryWrites=true&w=majority";
+const connectionString = "mongodb+srv://<username>:<password>@projectredcluster0.31rilke.mongodb.net/<database>?retryWrites=true&w=majority";
 
 
 const db = (connectionString);
