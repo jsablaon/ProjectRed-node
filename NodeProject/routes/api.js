@@ -17,7 +17,7 @@ const db = (connectionString);
 mongoose.Promise = global.Promise;
 
 mongoose.connect(db, { useNewUrlParser : true,
-useUnifiedTopology: true }, function(error) {
+useUnifiedTopology: true }, function(error, database) {
 	if (error) {
 		console.log("Error!" + error);
 	}
