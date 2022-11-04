@@ -4,16 +4,20 @@ var router = express.Router();
 const UserModel = require('../userSchema');
 const StoreModel = require('../storeSchema');
 const CartModel = require('../cartSchema');
+require('dotenv').config();
 
 // Connecting to database
-const connectionString = "mongodb+srv://<username>:<password>@projectredcluster0.31rilke.mongodb.net/<database>?retryWrites=true&w=majority";
+const userName = process.env.MONGODB_USER
+const password = process.env.MONGODB_PW
+const database = process.env.MONGODB
 
+const connectionString = `mongodb+srv://${userName}:${password}@projectredcluster0.31rilke.mongodb.net/${database}?retryWrites=true&w=majority`;
 
 const db = (connectionString);
 mongoose.Promise = global.Promise;
 
 mongoose.connect(db, { useNewUrlParser : true,
-useUnifiedTopology: true }, function(error) {
+useUnifiedTopology: true }, function(error, database) {
 	if (error) {
 		console.log("Error!" + error);
 	}
