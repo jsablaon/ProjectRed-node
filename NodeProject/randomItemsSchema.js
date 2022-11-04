@@ -1,17 +1,21 @@
 const mongoose = require('mongoose')
 
-const RandomObject = mongoose.Schema;
+const RandomItemsObject = mongoose.Schema;
 
-const RandomModel = new RandomObject({
+const RandomItemsModel = new RandomItemsObject({
     userId: {
         type: Number,
         required: true
     },
-    zipcode: {
+    storeId: {
+        type: Number,
+        required: true
+    },
+    keyword: {
         type: String,
         required: true
     },
-    randomData: {
+    randomItemsData: {
         type: String,
         required: true
     },
@@ -21,4 +25,4 @@ const RandomModel = new RandomObject({
     }
 });
 
-module.exports = mongoose.model("randomObject", RandomModel);
+module.exports = mongoose.model("randomItemsObject", RandomItemsModel);

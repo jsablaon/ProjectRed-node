@@ -2,7 +2,6 @@ const express=require('express');
 const bodyParser=require('body-parser');
 const api = require('./routes/api');
 const targetApi = require('./routes/targetApi')
-
 var path = require('path');
 var indexRouter = require ('./routes/index');
 var usersRouter = require ('./routes/users');
@@ -28,7 +27,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 // Parses the text as json
 app.use(bodyParser.json());
 app.use(express.json())
-
 app.use(cors(corsOptions));
 
 app.use('/api', api);
