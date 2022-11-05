@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const randomObject = require('../randomSchema')
+const randomStoresObject = require('../randomSchema')
 const randomItemsObject = require('../randomItemsSchema')
 const request = require('request');
 const url = require('url');
@@ -20,6 +20,7 @@ let dbItemsJson
 let dbStoresJson
 
 let returnDbItems = []
+let returnDbStores = []
 
 // # 1 - get nearby store data using zipcode to get store id
 function getStoreDataApi(zip){
@@ -76,8 +77,35 @@ router.get('/', (req, res) => {
 
 // get all stores
 // console.log(storeJson.data.nearby_stores.stores[0].location_name);
-router.get('/getstores', (req, res) => {
-  res.send('Hello World')
+router.get('/getstores', async (req, res) => {
+  let pUserId = url.parse(req.url,true).query['userId']
+  let pZip = url.parse(req.url,true).query['zip'] 
+
+    // make a call to db to get all stores
+    try {
+      dbStoresJson = await randomStoresObject.find({userId: pUserId, zipcode: pZip}).exec()
+      console.log("GET SUCCESS")
+      setTimeout(function(){
+        let sampleJson = JSON.parse(dbStoresJson[0].randomData)
+        returnDbStores = [] // clear array for new items
+        for (let i = 0; i < sampleJson.data.nearby_stores.stores.length; i++) {
+          let storeObject = {}
+          // push store objects into returnDbStores
+          storeObject = {
+            userId: pUserId,
+            storeId: sampleJson.data.nearby_stores.stores[i].store_id,
+            locationName: sampleJson.data.nearby_stores.stores[i].location_name,
+            distance: sampleJson.data.nearby_stores.stores[i].distance,
+            phoneNumber: sampleJson.data.nearby_stores.stores[i].main_voice_phone_number,
+            address: sampleJson.data.nearby_stores.stores[i].mailing_address
+          }
+          returnDbStores.push(storeObject)
+        }
+        res.status(200).send(returnDbStores)
+      }, 2000)
+    } catch(err){
+      res.status(500).json({message: err.message})
+    }
 })
 
 // get all items
@@ -180,7 +208,8 @@ router.post('/savetargetitems', async (req, res) => {
 router.patch('/:id', (req, res) => {
 
 })
-// delete one
+// TODO: delete randomitemsobjects table after user session
+// TODO: delete randomobjects table after user session
 router.delete('/:id', (req, res) => {
 
 })
