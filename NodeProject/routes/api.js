@@ -20,7 +20,9 @@ mongoose.connect(db, { useNewUrlParser : true,
 useUnifiedTopology: true }, function(error, database) {
 	if (error) {
 		console.log("Error!" + error);
-	}
+	} else {
+        console.log("Connected to DB.")
+    }
 });
 
 // create
