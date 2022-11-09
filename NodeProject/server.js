@@ -31,7 +31,7 @@ app.use(cors(corsOptions));
 
 app.use('/api', api);
 app.use('/targetApi', targetApi);
-app.use('/', indexRouter);
+app.use('/index', indexRouter);
 app.use('/users', usersRouter);
 
 module.exports = app;
