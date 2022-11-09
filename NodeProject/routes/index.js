@@ -1,23 +1,23 @@
 var express = require('express');
 var router = express.Router();
 
-giftArray = [
-  {name: "flowers1", price: "11"},
-  {name: "flowers2", price: "12"},
-  {name: "flowers3", price: "13"},
-  {name: "flowers4", price: "14"},
-];
+// giftArray = [
+//   {name: "flowers1", price: "11"},
+//   {name: "flowers2", price: "12"},
+//   {name: "flowers3", price: "13"},
+//   {name: "flowers4", price: "14"},
+// ];
 
-/* GET giftArray */
-router.get('/gifts', function(req, res, next) {
-  console.log(giftArray);
-  res.status(200).json(giftArray);
-});
+// /* GET giftArray */
+// router.get('/gifts', function(req, res, next) {
+//   console.log(giftArray);
+//   res.status(200).json(giftArray);
+// });
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+// /* GET home page. */
+// router.get('/', function(req, res, next) {
+//   res.render('index', { title: 'Express' });
+// });
 
 
 
@@ -32,7 +32,7 @@ itemArray = [
 
 /* GET items. */
 router.get('/items', function(req, res) {
-  console.log(itemArray);
+  //console.log(itemArray);
   res.status(200).json(itemArray);
 });
 
@@ -43,7 +43,7 @@ router.get('/items/:id', function(req, res) {
   {
     if(itemArray[i].id == req.params.id)
     {
-      console.log(itemArray[i]);
+      //console.log(itemArray[i]);
       found = true;
       res.status(200).json(itemArray[i]);
     }
@@ -57,7 +57,7 @@ router.get('/items/:id', function(req, res) {
 /* UPDATE item */
 router.put('/items/:id', function(req, res) {
   var changedItem = req.body;
-  console.log(req.params.id);
+  // console.log(req.params.id);
   let found = false;
   for(var i=0; i < itemArray.length; i++)
   {
