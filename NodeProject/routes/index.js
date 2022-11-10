@@ -73,5 +73,23 @@ router.put('/items/:id', function(req, res) {
   }
 });
 
+router.delete('/items/:id', function (req, res){
+
+    let found = false;
+    for(var i=0; i < itemArray.length; i++)
+    {
+      if( itemArray[i].id == req.params.id)
+      {
+        console.log(itemArray[i]);
+        found = true;
+        itemArray.splice(i,1);
+        res.status(200).send("delete successful");
+      }
+    }
+    if (found === false)
+    {
+      res.status(500).send("no such item");
+    }
+});
 
 module.exports = router;
