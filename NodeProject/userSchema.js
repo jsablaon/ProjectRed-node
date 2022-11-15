@@ -4,7 +4,7 @@ const User = mongoose.Schema;
 
 const UserModel = new User({
     UserId: {
-        type: Number,
+        type: String,
         required: true
     },
     Name: {
