@@ -2,8 +2,12 @@ var mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
 const UserModel = require('../userSchema');
+const userSchema = require('../userSchema');
+const { post } = require('request');
 
 require('dotenv').config();
+
+tempUser = {UserId: '', Name: '', Email: ''}
 
 // Connecting to database
 const userName = process.env.MONGODB_USER
@@ -26,11 +30,15 @@ useUnifiedTopology: true }, function(error, database) {
 
 /* GET user */
 router.get('/user/:id', function(req, res) {
+
   let found = false;
   //insert code that checks the mongo db for the req.params.id
-
+  console.log(req.params.id);
   //if it's there return the user. if not return an error
-
+  if( tempUser.UserId == req.params.id){
+    found = true;
+    res.status(200).json(tempUser);
+  }
   if(!found){
     res.status(500).send("no such item");
   }
@@ -45,7 +53,14 @@ router.put('/user/:id', function(req, res) {
 
   //checks for user ID
 
+
   //update the mongo user with the req.body
+
+  //updates user on node
+  tempUser = changedUser;
+  found = true;
+  res.status(200).json(tempUser);
+
 
   
   if(!found){
@@ -68,7 +83,12 @@ router.delete('/user/:id', function (req, res){
 router.post('/user', function(req,res) {
   var newUser = (req.body);
   //send newUser to mongo
-
+  if(newUser.UserId != tempUser.UserId){
+    tempUser = newUser;
+    console.log(tempUser.Name);
+    res.status(201).json(newUser)
+  }
+  
 });
 
 
