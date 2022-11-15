@@ -37,7 +37,7 @@ router.get('/user/:id', function(req, res) {
 
 });
 
-/* UPDATE item */
+/* UPDATE user */
 router.put('/user/:id', function(req, res) {
   var changedUser = req.body;
   console.log(req.params.id);
@@ -68,9 +68,8 @@ router.delete('/user/:id', function (req, res){
 router.post('/user', function(req,res) {
   var newUser = (req.body);
   //send newUser to mongo
-  
-}
-)
+
+});
 
 
 
