@@ -65,6 +65,13 @@ router.delete('/user/:id', function (req, res){
 
 });
 
+router.post('/user', function(req,res) {
+  var newUser = (req.body);
+  //send newUser to mongo
+  
+}
+)
+
 
 
 
