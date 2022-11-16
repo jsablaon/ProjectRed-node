@@ -8,7 +8,7 @@ const cartSchema = new Cart({
         required: true
     },
     UserId: {
-        type: Number,
+        type: String,
         required: true
     },
     Items: {
