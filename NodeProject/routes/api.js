@@ -7,9 +7,9 @@ const CartModel = require('../cartSchema');
 require('dotenv').config();
 
 // Connecting to database
-const userName = process.env.MONGODB_USER
-const password = process.env.MONGODB_PW
-const database = process.env.MONGODB
+const userName = process.env.MONGODB_USER;
+const password = process.env.MONGODB_PW;
+const database = process.env.MONGODB;
 
 const connectionString = `mongodb+srv://${userName}:${password}@projectredcluster0.31rilke.mongodb.net/${database}?retryWrites=true&w=majority`;
 
@@ -20,6 +20,7 @@ mongoose.connect(db, { useNewUrlParser : true,
 useUnifiedTopology: true }, function(error, database) {
 	if (error) {
 		console.log("Error!" + error);
+        console.log(connectionString);
 	} else {
         console.log("Connected to DB.")
     }
