@@ -118,6 +118,10 @@ router.get('/getitems', async (req, res) => {
     console.log("GET SUCCESS")
     setTimeout(function(){
       let sampleJson = JSON.parse(dbItemsJson[0].randomItemsData)
+
+      // test
+      // console.log(sampleJson.data.search.products[0].tcin)
+
       returnDbItems = [] // clear array for new items
       for (let i = 0; i < sampleJson.data.search.products.length; i++) {
         let itemObject = {}
@@ -126,6 +130,7 @@ router.get('/getitems', async (req, res) => {
         itemObject = {
           userId: pUserId,
           storeId: pStoreId,
+          itemId: sampleJson.data.search.products[i].tcin,
           itemName: sampleJson.data.search.products[i].item.product_description.title,
           itemPrice: sampleJson.data.search.products[i].parent.price.formatted_current_price,
           itemImage: sampleJson.data.search.products[i].item.enrichment.images.primary_image_url,
