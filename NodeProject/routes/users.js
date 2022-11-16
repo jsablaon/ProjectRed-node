@@ -1,9 +1,11 @@
 var mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
-const UserModel = require('../userSchema');
+//const UserModel = require('../userSchema');
 const userSchema = require('../userSchema');
 const { post } = require('request');
+const request = require('request');
+const url = require('url');
 
 require('dotenv').config();
 
@@ -111,9 +113,31 @@ router.delete('/user/:id', function (req, res){
 
 //Add new user
 router.post('/user', function(req,res) {
-  var newUser = (req.body);
+  var newUser = new userSchema(req.body);
   let found = false;
 
+  let email = url.parse(req.url,true).query['Email'];
+  let userId = url.parse(req.url,true).query['UserId'];
+  let name = url.parse(req.url,true).query['Name'];
+  console.log(name);
+  setTimeout(async function() {
+  
+    try{
+      const newDocument = await newUser.save()
+      res.status(201).json(newDocument)
+    } catch(err) {
+      res.status(400).json({ message: err.message })
+    }
+  }, 5000)
+  // let oneNewUser = new userSchema(req.body);
+  // oneNewUser.save((err, user) => {
+  //   if(err) {
+  //     res.status(500).send(err);
+  //   }
+  //   else{
+  //     res.status(201).json(user);
+  //   }
+  // })
 
   /* TEMPORARY */
   //send newUser to mongo if it doesn't exsist already
