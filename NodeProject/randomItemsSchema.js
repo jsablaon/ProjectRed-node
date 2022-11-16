@@ -4,7 +4,7 @@ const RandomItemsObject = mongoose.Schema;
 
 const RandomItemsModel = new RandomItemsObject({
     userId: {
-        type: String,
+        type: Number,
         required: true
     },
     storeId: {

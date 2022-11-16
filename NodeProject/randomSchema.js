@@ -4,7 +4,7 @@ const RandomObject = mongoose.Schema;
 
 const RandomModel = new RandomObject({
     userId: {
-        type: String,
+        type: Number,
         required: true
     },
     zipcode: {
