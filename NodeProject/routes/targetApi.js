@@ -22,6 +22,8 @@ let dbStoresJson
 let returnDbItems = []
 let returnDbStores = []
 
+let storeArray = []
+
 // # 1 - get nearby store data using zipcode to get store id
 function getStoreDataApi(zip){
   let options = {
@@ -159,26 +161,42 @@ router.post('/', (req, res) => {
 router.post('/savetargetstore', async (req, res) => {
   let zipCode = url.parse(req.url,true).query['zip']
   let userId = url.parse(req.url,true).query['userId']
-  getStoreDataApi(zipCode)
-  setTimeout(async function() {
-      // console.log(storeJson.data.nearby_stores.stores[0].location_name)
-      storeString = JSON.stringify(storeJson) // json obj -> string
 
-      const doc = new randomObject({
-        userId: userId,
-        zipcode: zipCode,
-        randomData: storeString
-      })
-    
-      try{
-        const newDocument = await doc.save()
-        res.status(201).json(newDocument)
-      } catch(err) {
-        res.status(400).json({ message: err.message })
-      }
+  console.log(`zipcode=${zipCode} | useriD=${userId}`)
 
-  }, 5000)
+  // check if zipcode and user comco already exist in db
+  let found = false;
+  storeArray = await randomStoresObject.find({});
 
+  for(let i = 0; i < storeArray.length; i++){
+    if(storeArray[i].userId == userId && storeArray[i].zipcode == zipCode){
+      found = true;
+    }
+  }
+
+  if(!found){
+    console.log(`no existing user and zipcode combination in db. Adding userId=${userId} & zipcode=${zipCode} to db`)
+    getStoreDataApi(zipCode)
+    setTimeout(async function() {
+        // console.log(storeJson.data.nearby_stores.stores[0].location_name)
+        storeString = JSON.stringify(storeJson) // json obj -> string
+  
+        const doc = new randomStoresObject({
+          userId: userId,
+          zipcode: zipCode,
+          randomData: storeString
+        })
+      
+        try{
+          const newDocument = await doc.save()
+          res.status(201).json(newDocument)
+        } catch(err) {
+          res.status(400).json({ message: err.message })
+        }
+    }, 5000)
+  } else {
+    console.log(`found existing user and zipcode in db. userId=${userId} & zipcode=${zipCode}`)
+  }
 });
 
 // insert random record to mongo to cache items data
