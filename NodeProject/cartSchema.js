@@ -5,14 +5,10 @@ const Cart = mongoose.Schema;
 
 const cartSchema = new Cart({
     cartId: {
-        type: Number,
-        required: true
-    },
-    userId: {
         type: String,
         required: true
     },
-    name: {
+    userId: {
         type: String,
         required: true
     },
