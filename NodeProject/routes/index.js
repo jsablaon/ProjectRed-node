@@ -1,4 +1,5 @@
 var express = require('express');
+const cartItemSchema = require('../cartItemSchema');
 var router = express.Router();
 
 const cartSchema = require('../cartSchema');
@@ -32,8 +33,14 @@ itemArray = [
 
 /* GET items. */
 router.get('/items', function(req, res) {
-  console.log(itemArray);
-  res.status(200).json(itemArray);
+  //console.log(itemArray);
+  cartItemSchema.find({}, (err, AllCartItems) => {
+    if(err){
+      res.status(500).send(err);
+    }
+    res.status(200).json(AllCartItems);
+  });
+  //res.status(200).json(itemArray);
 });
 
 /* GET item */
@@ -56,46 +63,94 @@ router.get('/items/:id', function(req, res) {
 
 /* UPDATE item */
 router.put('/items/:id', function(req, res) {
-  var changedItem = req.body;
-  console.log(req.params.id);
+  var changedItem = new cartItemSchema(req.body);
+  updateId = req.params.id;
+  //console.log(req.params.id);
   let found = false;
-  for(var i=0; i < itemArray.length; i++)
-  {
-    if(itemArray[i].itemId == req.params.id)
-    {
-      itemArray[i] = changedItem;
-      found = true;
-      res.status(200).json(itemArray[i]);
-    }
-  }
-  if(!found){
-    res.status(500).send("no such item");
-  }
+
+  setTimeout(async function() {
+    let filter = {itemId: updateId};
+    console.log(filter);
+    let currentItem = await cartItemSchema.findOneAndUpdate(filter, changedItem);
+    console.log(currentItem)
+    try{
+      res.status(200).json(currentItem)
+    } 
+    catch(err) {
+      res.status(400).json({ message: err.message })
+    }   
+  }, 10)
+  // var changedItem = new cartItemSchema(req.body);
+  // console.log(req.params.id);
+  // let found = false;
+  // for(var i=0; i < itemArray.length; i++)
+  // {
+  //   if(itemArray[i].itemId == req.params.id)
+  //   {
+  //     itemArray[i] = changedItem;
+  //     found = true;
+  //     res.status(200).json(itemArray[i]);
+  //   }
+  // }
+  // if(!found){
+  //   res.status(500).send("no such item");
+  // }
 });
 
 router.delete('/items/:id', function (req, res){
 
-    let found = false;
-    for(var i=0; i < itemArray.length; i++)
-    {
-      if( itemArray[i].itemId == req.params.id)
-      {
-        console.log(itemArray[i]);
-        found = true;
-        itemArray.splice(i,1);
-        res.status(200).send("delete successful");
-      }
-    }
-    if (found === false)
-    {
-      res.status(500).send("no such item");
-    }
+
+  var removedItem = new cartItemSchema(req.body);
+  var removeId = req.params.id;
+  //console.log(req.params.id);
+  let found = false;
+
+  setTimeout(async function() {
+    let filter = {itemId: removeId};
+    console.log(filter);
+    await cartItemSchema.findOneAndDelete(filter, removedItem);
+    try{
+      res.status(500).json("user deleted")
+    } 
+    catch(err) {
+      res.status(500).json("unable to delete user")
+    }   
+  }, 10)
+    // let found = false;
+    // for(var i=0; i < itemArray.length; i++)
+    // {
+    //   if( itemArray[i].itemId == req.params.id)
+    //   {
+    //     console.log(itemArray[i]);
+    //     found = true;
+    //     itemArray.splice(i,1);
+    //     res.status(200).send("delete successful");
+    //   }
+    // }
+    // if (found === false)
+    // {
+    //   res.status(500).send("no such item");
+    // }
 });
 
 router.post('/items', function(req,res){
-  var newItem = (req.body);
+  var newItem = new cartItemSchema(req.body);
+  console.log(newItem);
   itemArray.push(newItem);
-  res.status(201).json(newItem);
+
+  
+  let found = false;
+
+  setTimeout(async function() {
+      try{
+        const newDocument = await newItem.save();
+        res.status(201).json(newDocument);
+      } catch(err) {
+        res.status(400).json({ message: err.message })
+      }
+    
+    
+  }, 10)
 
 });
 
