@@ -1,17 +1,30 @@
 const mongoose = require('mongoose');
+const cartItemSchema = require('./cartItemSchema');
 
 const Cart = mongoose.Schema;
 
 const cartSchema = new Cart({
-    CartId: {
-        type: Number,
-        required: true
-    },
-    UserId: {
+    cartId: {
         type: String,
         required: true
     },
-    Items: {
+    userId: {
+        type: String,
+        required: true
+    },
+    billingAddress: {
+        type: String,
+        required: true
+    },
+    shippingAddress: {
+        type: String,
+        required: true
+    },
+    paymentInfo: {
+        type: String,
+        required: true
+    },
+    items: {
         type: Array,
         required: true
     }
