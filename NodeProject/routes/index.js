@@ -25,7 +25,7 @@ const cartSchema = require('../cartSchema');
 
 itemArray = [
   { userId: '123456789', storeId: 'storestringnumbers', itemId: '09876389', itemQty: 1, itemName: 'banana', itemPrice: 5.95, itemImage: 'https://www.w3schools.com/images/w3schools_green.jpg', itemVideo: '' },
-  { userId: '123456789', storeId: '5668556', itemId: '098763', itemQty: 1, itemName: 'bread', itemPrice: 60.32, itemImage: 'https://www.w3schools.com/images/w3schools_green.jpg', itemVideo: '' },
+  { userId: '102125659489827524664', storeId: '5668556', itemId: '098763', itemQty: 1, itemName: 'bread', itemPrice: 60.32, itemImage: 'https://www.w3schools.com/images/w3schools_green.jpg', itemVideo: '' },
   { userId: '123456789', storeId: '348674356845465', itemId: '5369465526', itemQty: 1, itemName: 'rum', itemPrice: 21.95, itemImage: 'https://www.w3schools.com/images/w3schools_green.jpg', itemVideo: '' }
 ];
 
