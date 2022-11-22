@@ -92,4 +92,15 @@ router.delete('/items/:id', function (req, res){
     }
 });
 
+router.post('/items', function(req,res){
+  var newItem = (req.body);
+  itemArray.push(newItem);
+  res.status(201).json(newItem);
+
+});
+
+hashCode = function(s){
+  return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
+}
+
 module.exports = router;
