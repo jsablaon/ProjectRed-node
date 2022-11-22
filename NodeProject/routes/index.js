@@ -57,7 +57,7 @@ router.get('/items/:id', function(req, res) {
 
 /* UPDATE item */
 router.put('/items/:id', function(req, res) {
-  var changedItem = cartItemSchema(req.body);
+  var changedItem = new cartItemSchema(req.body);
   console.log(req.params.id);
   let found = false;
   for(var i=0; i < itemArray.length; i++)
@@ -94,9 +94,24 @@ router.delete('/items/:id', function (req, res){
 });
 
 router.post('/items', function(req,res){
-  var newItem = cartItemSchema(req.body);
+  var newItem = new cartItemSchema(req.body);
   itemArray.push(newItem);
-  res.status(201).json(newItem);
+
+  
+  let found = false;
+
+  setTimeout(async function() {
+    cartItemsArray = await cartItemSchema.find({});
+  
+      try{
+        const newDocument = await newItem.save()
+        res.status(201).json(newDocument)
+      } catch(err) {
+        res.status(400).json({ message: err.message })
+      }
+    
+    
+  }, 10)
 
 });
 
