@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+const cartSchema = require('../cartSchema');
+
 // giftArray = [
 //   {name: "flowers1", price: "11"},
 //   {name: "flowers2", price: "12"},
@@ -22,11 +24,9 @@ var router = express.Router();
 
 
 itemArray = [
-  { id: 44, name: 'banana', price: 5.95, qty: 1 },
-  { id: 65, name: 'bread', price: 7.90, qty: 2 },
-  { id: 2, name: 'eggs', price: 8.00, qty: 1 },
-  { id: 3, name: 'rye', price: 4.35, qty: 1 },
-  { id: 4, name: 'broth', price: 2.00, qty: 3 }
+  { userId: '123456789', storeId: 'storestringnumbers', itemId: '09876389', itemQty: 1, itemName: 'banana', itemPrice: 5.95, itemImage: 'https://www.w3schools.com/images/w3schools_green.jpg', itemVideo: '' },
+  { userId: '102125659489827524664', storeId: '5668556', itemId: '098763', itemQty: 1, itemName: 'bread', itemPrice: 60.32, itemImage: 'https://www.w3schools.com/images/w3schools_green.jpg', itemVideo: '' },
+  { userId: '123456789', storeId: '348674356845465', itemId: '5369465526', itemQty: 1, itemName: 'rum', itemPrice: 21.95, itemImage: 'https://www.w3schools.com/images/w3schools_green.jpg', itemVideo: '' }
 ];
 
 
@@ -41,7 +41,7 @@ router.get('/items/:id', function(req, res) {
   let found = false;
   for(var i=0; i < itemArray.length; i++)
   {
-    if(itemArray[i].id == req.params.id)
+    if(itemArray[i].itemId == req.params.id)
     {
       console.log(itemArray[i]);
       found = true;
@@ -61,7 +61,7 @@ router.put('/items/:id', function(req, res) {
   let found = false;
   for(var i=0; i < itemArray.length; i++)
   {
-    if(itemArray[i].id == req.params.id)
+    if(itemArray[i].itemId == req.params.id)
     {
       itemArray[i] = changedItem;
       found = true;
@@ -78,7 +78,7 @@ router.delete('/items/:id', function (req, res){
     let found = false;
     for(var i=0; i < itemArray.length; i++)
     {
-      if( itemArray[i].id == req.params.id)
+      if( itemArray[i].itemId == req.params.id)
       {
         console.log(itemArray[i]);
         found = true;
