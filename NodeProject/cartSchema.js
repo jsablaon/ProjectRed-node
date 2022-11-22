@@ -4,15 +4,31 @@ const cartItemSchema = require('./cartItemSchema');
 const Cart = mongoose.Schema;
 
 const cartSchema = new Cart({
-    CartId: {
+    cartId: {
         type: Number,
         required: true
     },
-    UserId: {
+    userId: {
         type: String,
         required: true
     },
-    Items: {
+    name: {
+        type: String,
+        required: true
+    },
+    billingAddress: {
+        type: String,
+        required: true
+    },
+    shippingAddress: {
+        type: String,
+        required: true
+    },
+    paymentInfo: {
+        type: String,
+        required: true
+    },
+    items: {
         type: Array,
         required: true
     }
