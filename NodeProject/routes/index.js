@@ -95,17 +95,16 @@ router.delete('/items/:id', function (req, res){
 
 router.post('/items', function(req,res){
   var newItem = new cartItemSchema(req.body);
+  console.log(newItem);
   itemArray.push(newItem);
 
   
   let found = false;
 
   setTimeout(async function() {
-    cartItemsArray = await cartItemSchema.find({});
-  
       try{
-        const newDocument = await newItem.save()
-        res.status(201).json(newDocument)
+        const newDocument = await newItem.save();
+        res.status(201).json(newDocument);
       } catch(err) {
         res.status(400).json({ message: err.message })
       }
