@@ -1,4 +1,5 @@
 var express = require('express');
+const cartItemSchema = require('../cartItemSchema');
 var router = express.Router();
 
 const cartSchema = require('../cartSchema');
@@ -56,7 +57,7 @@ router.get('/items/:id', function(req, res) {
 
 /* UPDATE item */
 router.put('/items/:id', function(req, res) {
-  var changedItem = req.body;
+  var changedItem = cartItemSchema(req.body);
   console.log(req.params.id);
   let found = false;
   for(var i=0; i < itemArray.length; i++)
@@ -93,7 +94,7 @@ router.delete('/items/:id', function (req, res){
 });
 
 router.post('/items', function(req,res){
-  var newItem = (req.body);
+  var newItem = cartItemSchema(req.body);
   itemArray.push(newItem);
   res.status(201).json(newItem);
 
