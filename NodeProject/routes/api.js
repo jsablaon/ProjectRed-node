@@ -27,30 +27,6 @@ useUnifiedTopology: true }, function(error, database) {
 });
 
 
-
-// create
-router.get('/saveuser', function(req, res) {
-    var newUser = new UserModel(
-        {   
-            UserId:1, 
-            FName:"John", 
-            LName:"Smith", 
-            Email:"johnSmith@email.com", 
-            Password:"password"
-        }
-    );
-
-    newUser.save(function(err, data) {
-        if(err) {
-            console.log(error);
-        }
-        else {
-            console.log(`-----> record inserted: ${newUser}`)
-            res.send("Data inserted");
-        }
-    });
-});
-
 router.get('/savestore', function(req, res) {
     var newStore = new StoreModel(
         {   
