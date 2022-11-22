@@ -95,6 +95,7 @@ router.delete('/items/:id', function (req, res){
 router.post('/items', function(req,res){
   var newItem = (req.body);
   itemArray.push(newItem);
+  res.status(201).json(newItem);
 
 });
 
