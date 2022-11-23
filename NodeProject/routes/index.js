@@ -40,6 +40,20 @@ router.get('/items', function(req, res) {
     }
     res.status(200).json(AllCartItems);
   });
+
+  // setTimeout(async function() {
+  //   // let filter = {itemId: userId};
+  //   // console.log(filter);
+  //   await cartItemSchema.find({}, (err, AllCartItems) => {
+  //   if(err){
+  //     res.status(500).send(err);
+  //   }
+  //   res.status(200).json(AllCartItems);
+  // });  
+  // }, 50)
+
+
+
   //res.status(200).json(itemArray);
 });
 
@@ -64,14 +78,15 @@ router.get('/items/:id', function(req, res) {
 /* UPDATE item */
 router.put('/items/:id', function(req, res) {
   var changedItem = new cartItemSchema(req.body);
-  updateId = req.params.id;
+  userId = req.params.id;
   //console.log(req.params.id);
   let found = false;
 
   setTimeout(async function() {
-    let filter = {itemId: updateId};
+    let filter = {itemId: userId};
     console.log(filter);
-    let currentItem = await cartItemSchema.findOneAndUpdate(filter, changedItem);
+    console.log(changedItem)
+    let currentItem = await cartItemSchema.findOneAndUpdate({"userId": changedItem.userId, "itemId": changedItem.itemId}, changedItem);
     console.log(currentItem)
     try{
       res.status(200).json(currentItem)
@@ -79,7 +94,7 @@ router.put('/items/:id', function(req, res) {
     catch(err) {
       res.status(400).json({ message: err.message })
     }   
-  }, 10)
+  }, 1)
   // var changedItem = new cartItemSchema(req.body);
   // console.log(req.params.id);
   // let found = false;
@@ -100,7 +115,7 @@ router.put('/items/:id', function(req, res) {
 router.delete('/items/:id', function (req, res){
 
 
-  var removedItem = new cartItemSchema(req.body);
+  //var removedItem = new cartItemSchema(req.body);
   var removeId = req.params.id;
   //console.log(req.params.id);
   let found = false;
@@ -108,14 +123,15 @@ router.delete('/items/:id', function (req, res){
   setTimeout(async function() {
     let filter = {itemId: removeId};
     console.log(filter);
-    await cartItemSchema.findOneAndDelete(filter, removedItem);
-    try{
-      res.status(500).json("user deleted")
-    } 
-    catch(err) {
-      res.status(500).json("unable to delete user")
-    }   
-  }, 10)
+    await cartItemSchema.findOneAndDelete(filter, function(err) {
+      if(!err){
+        res.status(500).json("item deleted")
+      }
+      else{
+        res.status(500).json("unable to delete item")
+      }
+    });
+  }, 1)
     // let found = false;
     // for(var i=0; i < itemArray.length; i++)
     // {
