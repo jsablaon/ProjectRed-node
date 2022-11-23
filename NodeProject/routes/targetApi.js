@@ -22,6 +22,9 @@ let dbStoresJson
 let returnDbItems = []
 let returnDbStores = []
 
+let storeArray = []
+let itemsArray = []
+
 // # 1 - get nearby store data using zipcode to get store id
 function getStoreDataApi(zip){
   let options = {
@@ -112,35 +115,43 @@ router.get('/getstores', async (req, res) => {
 router.get('/getitems', async (req, res) => {
   let pStoreId = url.parse(req.url,true).query['storeId']
   let pUserId = url.parse(req.url,true).query['userId'] 
+  let pKeyword = url.parse(req.url,true).query['keyword']
+
+  console.log(`storeid = ${pStoreId} | userid = ${pUserId} | keyword = ${pKeyword}`)
+  
   // make a call to db to get all items
   try {
-    dbItemsJson = await randomItemsObject.find({userId: pUserId, storeId: pStoreId}).exec()
+    dbItemsJson = await randomItemsObject.find({userId: pUserId, storeId: pStoreId, keyword: pKeyword}).exec()
     console.log("GET SUCCESS")
     setTimeout(function(){
       let sampleJson = JSON.parse(dbItemsJson[0].randomItemsData)
 
       // test
-      // console.log(sampleJson.data.search.products[0].tcin)
+      // console.log(sampleJson.data.search.products[0])
 
       returnDbItems = [] // clear array for new items
       for (let i = 0; i < sampleJson.data.search.products.length; i++) {
         let itemObject = {}
         let testBoolean = (typeof(sampleJson.data.search.products[i].item.enrichment.videos)  != "undefined")
+
+        // test
+        // console.log(`=========================price: ${sampleJson.data.search.products[i].price.formatted_current_price}`)
+
         // push item objects into returnDbItems
         itemObject = {
           userId: pUserId,
           storeId: pStoreId,
           itemId: sampleJson.data.search.products[i].tcin,
           itemName: sampleJson.data.search.products[i].item.product_description.title,
-          itemPrice: sampleJson.data.search.products[i].parent.price.formatted_current_price,
+          // itemPrice: sampleJson.data.search.products[i].parent.price.formatted_current_price,
+          itemPrice: sampleJson.data.search.products[i].price.formatted_current_price,
           itemImage: sampleJson.data.search.products[i].item.enrichment.images.primary_image_url,
           itemVideo: testBoolean ? sampleJson.data.search.products[i].item.enrichment.videos[0].video_files[0].video_url : "No Video Link"
         }
         returnDbItems.push(itemObject)
       }
-      // return returnDbItems
       res.status(200).send(returnDbItems)
-    }, 2000)
+    }, 5000)
   } catch(err){
     res.status(500).json({message: err.message})
   }
@@ -159,26 +170,42 @@ router.post('/', (req, res) => {
 router.post('/savetargetstore', async (req, res) => {
   let zipCode = url.parse(req.url,true).query['zip']
   let userId = url.parse(req.url,true).query['userId']
-  getStoreDataApi(zipCode)
-  setTimeout(async function() {
-      // console.log(storeJson.data.nearby_stores.stores[0].location_name)
-      storeString = JSON.stringify(storeJson) // json obj -> string
 
-      const doc = new randomObject({
-        userId: userId,
-        zipcode: zipCode,
-        randomData: storeString
-      })
-    
-      try{
-        const newDocument = await doc.save()
-        res.status(201).json(newDocument)
-      } catch(err) {
-        res.status(400).json({ message: err.message })
-      }
+  console.log(`zipcode=${zipCode} | useriD=${userId}`)
 
-  }, 5000)
+  // check if zipcode and user comco already exist in db
+  let found = false;
+  storeArray = await randomStoresObject.find({});
 
+  for(let i = 0; i < storeArray.length; i++){
+    if(storeArray[i].userId == userId && storeArray[i].zipcode == zipCode){
+      found = true;
+    }
+  }
+
+  if(!found){
+    console.log(`no existing user and zipcode combination in db. Adding userId=${userId} & zipcode=${zipCode} to db`)
+    getStoreDataApi(zipCode)
+    setTimeout(async function() {
+        // console.log(storeJson.data.nearby_stores.stores[0].location_name)
+        storeString = JSON.stringify(storeJson) // json obj -> string
+  
+        const doc = new randomStoresObject({
+          userId: userId,
+          zipcode: zipCode,
+          randomData: storeString
+        })
+      
+        try{
+          const newDocument = await doc.save()
+          res.status(201).json(newDocument)
+        } catch(err) {
+          res.status(400).json({ message: err.message })
+        }
+    }, 5000)
+  } else {
+    console.log(`found existing user and zipcode in db. userId=${userId} & zipcode=${zipCode}`)
+  }
 });
 
 // insert random record to mongo to cache items data
@@ -188,25 +215,40 @@ router.post('/savetargetitems', async (req, res) => {
   let userId = url.parse(req.url,true).query['userId']
   // console.log(`storeid = ${storeId}`)
   // console.log(`keyword = ${keyword}`)
-  getItemsDataApi(storeId, keyword) 
-  setTimeout(async function() {
-    // console.log(storeJson.data.nearby_stores.stores[0].location_name)
-    itemsString = JSON.stringify(itemsJson) // json obj -> string
 
-    const doc = new randomItemsObject({
-      userId: userId,
-      storeId: storeId,
-      keyword: keyword,
-      randomItemsData: itemsString
-    })
-  
-    try{
-      const newDocument = await doc.save()
-      res.status(201).json(newDocument)
-    } catch(err) {
-      res.status(400).json({ message: err.message })
+  // check if userid, storeid and keyword combo already exist in db
+  let found = false;
+  itemsArray = await randomItemsObject.find({});
+
+  for(let i = 0; i < itemsArray.length; i++){
+    if(itemsArray[i].userId == userId && itemsArray[i].storeId == storeId && itemsArray[i].keyword == keyword){
+      found = true;
     }
-  }, 5000)
+  }
+
+  if(!found){
+    console.log(`no existing user and zipcode combination in db. Adding userId=${userId} & storeId=${storeId} | keyword=${keyword} to db`)
+    getItemsDataApi(storeId, keyword) 
+    setTimeout(async function() {
+      itemsString = JSON.stringify(itemsJson) // json obj -> string
+  
+      const doc = new randomItemsObject({
+        userId: userId,
+        storeId: storeId,
+        keyword: keyword,
+        randomItemsData: itemsString
+      })
+    
+      try{
+        const newDocument = await doc.save()
+        res.status(201).json(newDocument)
+      } catch(err) {
+        res.status(400).json({ message: err.message })
+      }
+    }, 5000)
+  } else {
+    console.log(`found existing user, storeid and keyword in db. userId=${userId} & storeId=${storeId} & keyword=${keyword}`)
+  }
 });
 
 // update one
