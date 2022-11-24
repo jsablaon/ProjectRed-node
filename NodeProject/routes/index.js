@@ -28,7 +28,7 @@ router.put('/items/:id', function(req, res) {
   var changedItem = new cartItemSchema(req.body);
 
   setTimeout(async function() {
-    let currentItem = await cartItemSchema.findOneAndUpdate({"userId": changedItem.userId, "itemId": changedItem.itemId, "storeId": changedItem.storeId}, changedItem);
+    let currentItem = await cartItemSchema.findOneAndUpdate({"userId": changedItem.userId, "itemId": changedItem.itemId}, changedItem);
     try{
       res.status(200).json(currentItem)
     } 
@@ -42,9 +42,9 @@ router.put('/items/:id', function(req, res) {
 router.delete('/deleteitems', async (req, res) => {
   let pUserId = url.parse(req.url,true).query['userId'];
   let pItemId = url.parse(req.url,true).query['itemId'];
-  let pStoreId = url.parse(req.url,true).query['storeId'];
+  let pItemQty = url.parse(req.url,true).query['itemQty'];
 
-  await cartItemSchema.findOneAndDelete({"userId": pUserId, "itemId": pItemId, "storeId": pStoreId});
+  await cartItemSchema.findOneAndDelete({"userId": pUserId, "itemId": pItemId, "itemQty": pItemQty});
 });
 
  //Add item to cart
@@ -52,23 +52,23 @@ router.post('/items', function(req,res){
   var newItem = new cartItemSchema(req.body);
 
   setTimeout(async function() {
-    var items = await cartItemSchema.find({newItem});
-      // const isFound = items.some(element => {
-      //   if (element.storeId == newItem.storeId && element.userId == newItem.userId && element.itemId == newItem.itemId){
-      //     return true;
-      //   }
-      //   return false;
-      // });
-      console.log(items);
-      // if(!isFound)
-      // {
-      //   try{
-      //     const newDocument = await newItem.save();
-      //     res.status(201).json(newDocument);
-      //   } catch(err) {
-      //     res.status(400).json({ message: err.message })
-      //   }
-      // }    
+    var items = await cartItemSchema.find({});
+      const isFound = items.some(element => {
+        if (element.userId == newItem.userId && element.itemId == newItem.itemId){
+          return true;
+        }
+        return false;
+      });
+  
+      if(!isFound)
+      {
+        try{
+          const newDocument = await newItem.save();
+          res.status(201).json(newDocument);
+        } catch(err) {
+          res.status(400).json({ message: err.message })
+        }
+      }    
   }, 10)
 });
 
