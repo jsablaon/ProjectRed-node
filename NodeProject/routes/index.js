@@ -39,20 +39,13 @@ router.put('/items/:id', function(req, res) {
 });
 
 //delete item
- router.delete('/deleteitems', async (req, res) => {
+router.delete('/deleteitems', async (req, res) => {
   let pUserId = url.parse(req.url,true).query['userId'];
   let pItemId = url.parse(req.url,true).query['itemId'];
   let pItemQty = url.parse(req.url,true).query['itemQty'];
 
-  await cartItemSchema.findOneAndDelete({userId: pUserId, itemId: pItemId, itemQty: pItemQty}, function(err) {
-    if(!err){
-        res.status(500).json("item deleted")
-    }
-    else{
-      res.status(500).json("unable to delete item")
-    }
-  });
- });
+  await cartItemSchema.findOneAndDelete({"userId": pUserId, "itemId": pItemId, "itemQty": pItemQty});
+});
 
  //Add item to cart
 router.post('/items', function(req,res){
