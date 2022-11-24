@@ -52,15 +52,8 @@ router.post('/items', function(req,res){
   var newItem = new cartItemSchema(req.body);
 
   setTimeout(async function() {
-    var items = await cartItemSchema.find({});
-      const isFound = items.some(element => {
-        if (element.storeId == newItem.storeId && element.userId == newItem.userId && element.itemId == newItem.itemId){
-          return true;
-        }
-        return false;
-      });
-  
-      if(!isFound)
+    var items = await cartItemSchema.find({"userId": newItem.userId, "itemId": newItem.itemId, "storeId": newItem.storeId});
+      if(items.length == 0)
       {
         try{
           const newDocument = await newItem.save();
