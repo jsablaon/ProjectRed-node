@@ -28,7 +28,7 @@ router.put('/items/:id', function(req, res) {
   var changedItem = new cartItemSchema(req.body);
 
   setTimeout(async function() {
-    let currentItem = await cartItemSchema.findOneAndUpdate({"userId": changedItem.userId, "itemId": changedItem.itemId}, changedItem);
+    let currentItem = await cartItemSchema.findOneAndUpdate({"userId": changedItem.userId, "itemId": changedItem.itemId, "storeId": changedItem.storeId}, changedItem);
     try{
       res.status(200).json(currentItem)
     } 
@@ -42,9 +42,9 @@ router.put('/items/:id', function(req, res) {
 router.delete('/deleteitems', async (req, res) => {
   let pUserId = url.parse(req.url,true).query['userId'];
   let pItemId = url.parse(req.url,true).query['itemId'];
-  let pItemQty = url.parse(req.url,true).query['itemQty'];
+  let pStoreId = url.parse(req.url,true).query['storeId'];
 
-  await cartItemSchema.findOneAndDelete({"userId": pUserId, "itemId": pItemId, "itemQty": pItemQty});
+  await cartItemSchema.findOneAndDelete({"userId": pUserId, "itemId": pItemId, "storeId": pStoreId});
 });
 
  //Add item to cart
@@ -54,7 +54,7 @@ router.post('/items', function(req,res){
   setTimeout(async function() {
     var items = await cartItemSchema.find({});
       const isFound = items.some(element => {
-        if (element.userId == newItem.userId && element.itemId == newItem.itemId){
+        if (element.storeId == newItem.storeId && element.userId == newItem.userId && element.itemId == newItem.itemId){
           return true;
         }
         return false;
