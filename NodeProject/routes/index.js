@@ -133,4 +133,54 @@ router.get('/cart', function(req, res) {
   });
 });
 
+router.post('/items', function(req,res){
+  var newItem = new cartItemSchema(req.body);
+  console.log(newItem);
+  itemArray.push(newItem);
+
+  
+  let found = false;
+
+  setTimeout(async function() {
+      try{
+        const newDocument = await newItem.save();
+        res.status(201).json(newDocument);
+      } catch(err) {
+        res.status(400).json({ message: err.message })
+      }
+    
+    
+  }, 10)
+
+});
+
+router.post('/cart', function(req,res){
+  var newCart = new cartSchema(req.body);
+
+  setTimeout(async function() {
+    try{
+      const newDocument = await newCart.save();
+      res.status(201).json(newDocument);
+    } catch(err) {
+      res.status(400).json({ message: err.message })
+    }
+  }, 10)
+});
+
+/* GET carts. */
+router.get('/cart', function(req, res) {
+  //console.log(itemArray);
+  cartSchema.find({}, (err, AllCarts) => {
+    if(err){
+      res.status(500).send(err);
+    }
+    res.status(200).json(AllCarts);
+  });
+  //res.status(200).json(itemArray);
+});
+
+hashCode = function(s){
+  return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
+}
+
 module.exports = router;
