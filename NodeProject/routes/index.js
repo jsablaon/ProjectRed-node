@@ -1,6 +1,8 @@
 var express = require('express');
 const cartItemSchema = require('../cartItemSchema');
 var router = express.Router();
+const url = require('url');
+require('dotenv').config();
 
 const cartSchema = require('../cartSchema');
 
@@ -68,27 +70,45 @@ router.put('/items/:id', function(req, res) {
   }, 1)
 });
 
-router.delete('/items/:id', function (req, res){
 
-
-  //var removedItem = new cartItemSchema(req.body);
-  var removeId = req.params.id;
-  //console.log(req.params.id);
-  let found = false;
-
-  setTimeout(async function() {
-    let filter = {itemId: removeId};
-    console.log(filter);
-    await cartItemSchema.findOneAndDelete(filter, function(err) {
-      if(!err){
+ router.delete('/deleteitems', async (req, res) => {
+  let pUserId = url.parse(req.url,true).query['userId'];
+  let pItemId = url.parse(req.url,true).query['itemId'];
+  let pItemQty = url.parse(req.url,true).query['itemQty'];
+  //console.log(pUserId);
+  await cartItemSchema.findOneAndDelete({userId: pUserId, itemId: pItemId, itemQty: pItemQty}, function(err) {
+    if(!err){
         res.status(500).json("item deleted")
-      }
-      else{
-        res.status(500).json("unable to delete item")
-      }
-    });
-  }, 1)
-});
+    }
+    else{
+      res.status(500).json("unable to delete item")
+    }
+  });
+ });
+
+
+
+// router.delete('/items/:id', function (req, res){
+
+
+//   //var removedItem = new cartItemSchema(req.body);
+//   var removeId = req.params.id;
+//   //console.log(req.params.id);
+//   let found = false;
+
+//   setTimeout(async function() {
+//     let filter = {itemId: removeId};
+//     console.log(filter);
+//     await cartItemSchema.findOneAndDelete(filter, function(err) {
+//       if(!err){
+//         res.status(500).json("item deleted")
+//       }
+//       else{
+//         res.status(500).json("unable to delete item")
+//       }
+//     });
+//   }, 1)
+// });
 
 router.post('/items', function(req,res){
   var newItem = new cartItemSchema(req.body);
