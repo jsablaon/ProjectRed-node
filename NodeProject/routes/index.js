@@ -15,8 +15,6 @@ router.get('/items', function(req, res) {
     }
     res.status(200).json(AllCartItems);
   });
-
-
 });
 
 /* GET item */
@@ -28,11 +26,9 @@ router.get('/items/:id', function(req, res) {
 /* UPDATE item */
 router.put('/items/:id', function(req, res) {
   var changedItem = new cartItemSchema(req.body);
-  userId = req.params.id;
 
   setTimeout(async function() {
     let currentItem = await cartItemSchema.findOneAndUpdate({"userId": changedItem.userId, "itemId": changedItem.itemId}, changedItem);
-
     try{
       res.status(200).json(currentItem)
     } 
@@ -81,7 +77,6 @@ router.post('/items', function(req,res){
         }
       }    
   }, 10)
-
 });
 
 //Add cart
