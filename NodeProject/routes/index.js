@@ -61,7 +61,6 @@ router.put('/items/:id', function(req, res) {
  //Add item to cart
 router.post('/items', function(req,res){
   var newItem = new cartItemSchema(req.body);
-  console.log(newItem);
 
   setTimeout(async function() {
     var items = await cartItemSchema.find({});
