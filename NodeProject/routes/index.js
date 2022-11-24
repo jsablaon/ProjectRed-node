@@ -53,15 +53,15 @@ router.post('/items', function(req,res){
 
   setTimeout(async function() {
     var items = await cartItemSchema.find({"userId": newItem.userId, "itemId": newItem.itemId, "storeId": newItem.storeId});
-      if(items.length == 0)
-      {
-        try{
-          const newDocument = await newItem.save();
-          res.status(201).json(newDocument);
-        } catch(err) {
-          res.status(400).json({ message: err.message })
-        }
-      }    
+    if(items.length == 0)
+    {
+      try{
+        const newDocument = await newItem.save();
+        res.status(201).json(newDocument);
+      } catch(err) {
+        res.status(400).json({ message: err.message })
+      }
+    }    
   }, 10)
 });
 
