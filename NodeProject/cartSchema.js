@@ -12,6 +12,10 @@ const cartSchema = new Cart({
         type: String,
         required: true
     },
+    timeStamp: {
+        type: String,
+        required: true
+    },
     billingAddress: {
         type: String,
         required: true
