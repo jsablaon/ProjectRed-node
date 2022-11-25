@@ -80,8 +80,8 @@ router.post('/cart', function(req,res){
 });
 
 /* GET carts. */
-router.get('/cart', function(req, res) {
-  cartSchema.find({}, (err, AllCarts) => {
+router.get('/cart', async function(req, res) {
+  await cartSchema.find({}, (err, AllCarts) => {
     if(err){
       res.status(500).send(err);
     }
