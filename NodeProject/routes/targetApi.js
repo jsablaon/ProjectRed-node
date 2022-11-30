@@ -105,7 +105,7 @@ router.get('/getstores', async (req, res) => {
           returnDbStores.push(storeObject)
         }
         res.status(200).send(returnDbStores)
-      }, 2000)
+      }, 10)
     } catch(err){
       res.status(500).json({message: err.message})
     }
@@ -151,7 +151,7 @@ router.get('/getitems', async (req, res) => {
         returnDbItems.push(itemObject)
       }
       res.status(200).send(returnDbItems)
-    }, 5000)
+    }, 500)
   } catch(err){
     res.status(500).json({message: err.message})
   }
@@ -202,7 +202,7 @@ router.post('/savetargetstore', async (req, res) => {
         } catch(err) {
           res.status(400).json({ message: err.message })
         }
-    }, 5000)
+    }, 500)
   } else {
     console.log(`found existing user and zipcode in db. userId=${userId} & zipcode=${zipCode}`)
   }
@@ -245,7 +245,7 @@ router.post('/savetargetitems', async (req, res) => {
       } catch(err) {
         res.status(400).json({ message: err.message })
       }
-    }, 5000)
+    }, 2000)
   } else {
     console.log(`found existing user, storeid and keyword in db. userId=${userId} & storeId=${storeId} & keyword=${keyword}`)
   }
