@@ -25,6 +25,8 @@ let returnDbStores = []
 let storeArray = []
 let itemsArray = []
 
+let delay = 10
+
 // # 1 - get nearby store data using zipcode to get store id
 function getStoreDataApi(zip){
   let options = {
@@ -123,6 +125,7 @@ router.get('/getitems', async (req, res) => {
   try {
     dbItemsJson = await randomItemsObject.find({userId: pUserId, storeId: pStoreId, keyword: pKeyword}).exec()
     console.log("GET SUCCESS")
+    console.log(`delay=${delay}`)
     setTimeout(function(){
       let sampleJson = JSON.parse(dbItemsJson[0].randomItemsData)
 
@@ -151,7 +154,7 @@ router.get('/getitems', async (req, res) => {
         returnDbItems.push(itemObject)
       }
       res.status(200).send(returnDbItems)
-    }, 500)
+    }, delay)
   } catch(err){
     res.status(500).json({message: err.message})
   }
@@ -216,6 +219,9 @@ router.post('/savetargetitems', async (req, res) => {
   // console.log(`storeid = ${storeId}`)
   // console.log(`keyword = ${keyword}`)
 
+  // reset delay to 10
+  delay = 10
+
   // check if userid, storeid and keyword combo already exist in db
   let found = false;
   itemsArray = await randomItemsObject.find({});
@@ -227,6 +233,7 @@ router.post('/savetargetitems', async (req, res) => {
   }
 
   if(!found){
+    delay = 3000
     console.log(`no existing user and zipcode combination in db. Adding userId=${userId} & storeId=${storeId} | keyword=${keyword} to db`)
     getItemsDataApi(storeId, keyword) 
     setTimeout(async function() {
@@ -245,7 +252,7 @@ router.post('/savetargetitems', async (req, res) => {
       } catch(err) {
         res.status(400).json({ message: err.message })
       }
-    }, 2000)
+    }, 1000)
   } else {
     console.log(`found existing user, storeid and keyword in db. userId=${userId} & storeId=${storeId} & keyword=${keyword}`)
   }
